@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import connectDB from './config/db.js'
 import productRoutes from './routes/productRoutes.js'
 import userRoutes from './routes/userRoutes.js'
+import orderRoutes from './routes/orderRoutes.js'
 import { notFound, errorHandler } from './middleware/errorMiddleWare.js'
 
 
@@ -21,6 +22,9 @@ app.use('/api/products', productRoutes)
 
 //For getting users Routes 
 app.use('/api/users', userRoutes)
+
+//For getting Ordera Routes 
+app.use('/api/orders', orderRoutes)
 
 //For handling error 404  getting json responces in development mode
 app.use(notFound)

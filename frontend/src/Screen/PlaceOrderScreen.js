@@ -1,34 +1,59 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
 import { Row, Col, ListGroup, Image, Card, Button } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import { Link } from 'react-router-dom'
 import CheckoutSteps from '../components/CheckoutSteps'
+import { createOrder } from '../actions/orderActions'
 // import { creatOrder} from '../actions/cartActions'
 
-const PlaceOrderScreen = () => {
+const PlaceOrderScreen = ({ history }) => {
     const dispatch = useDispatch()
+
     const cart = useSelector(state => state.cart)
-    console.log(cart.paymentMethod)
+    // console.log(cart.paymentMethod)
+
     const addDecimals = (num) => {
         return (Math.round(num * 100) / 100).toFixed(2)
     }
 
+    const itemsPrice = addDecimals(cart.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0))
     //calculate price
-    cart.itemPrice = addDecimals(cart.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0))
+    // cart.itemsPrice = addDecimals(cart.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0))
 
-    const placeOrderHandler = () => {
-        console.log('placeOrder')
-    }
-
+    console.log("PRICE:", itemsPrice)
     //calculate Shipping price
-    cart.shippingPrice = addDecimals(cart.itemPrice > 100 ? 0 : 20)
-
+    const shippingPrice = addDecimals(Number(itemsPrice > 100 ? 0 : 20))
+    const orderItems = cart.cartItems
+    console.log(orderItems)
     //calculat tax price
-    cart.taxPrice = addDecimals(Number((0.15 * cart.itemPrice).toFixed(2)))
+    const taxPrice = addDecimals(Number((0.15 * itemsPrice).toFixed(2)))
     //calculat total Price
 
-    cart.totalPrice = (Number(cart.itemPrice) + Number(cart.shippingPrice) + Number(cart.taxPrice)).toFixed(2)
+    const totalPrice = (Number(itemsPrice) + Number(shippingPrice) + Number(taxPrice)).toFixed(2)
+
+    const orderCreate = useSelector(state => state.orderCreate)
+    const { order, success, error } = orderCreate
+    useEffect(() => {
+        if (success) {
+            history.push(`/order/${order._id}`)
+        }
+        // eslint-disable-next-line
+    }, [history, success])
+
+    const placeOrderHandler = () => {
+        // console.log(cart.cartItems)
+        // console.log('placeOrder')
+        dispatch(createOrder({
+            orderItems: cart.cartItems,
+            shippingAddress: cart.shippingAddress,
+            paymentMethod: cart.paymentMethod,
+            itemPrice: itemsPrice,
+            shippingPrice: shippingPrice,
+            taxPrice: taxPrice,
+            totalPrice: totalPrice
+        }))
+    }
     return (
         <>
             <CheckoutSteps step1 step2 step3 step4 />
@@ -86,26 +111,29 @@ const PlaceOrderScreen = () => {
                             <ListGroup.Item>
                                 <Row>
                                     <Col>Items</Col>
-                                    <Col>${cart.itemPrice}</Col>
+                                    <Col>${itemsPrice}</Col>
                                 </Row>
                             </ListGroup.Item>
                             <ListGroup.Item>
                                 <Row>
                                     <Col>Shipping</Col>
-                                    <Col>${cart.shippingPrice}</Col>
+                                    <Col>${shippingPrice}</Col>
                                 </Row>
                             </ListGroup.Item>
                             <ListGroup.Item>
                                 <Row>
                                     <Col>Tax</Col>
-                                    <Col>${cart.taxPrice}</Col>
+                                    <Col>${taxPrice}</Col>
                                 </Row>
                             </ListGroup.Item>
                             <ListGroup.Item>
                                 <Row>
                                     <Col>Total</Col>
-                                    <Col>${cart.totalPrice}</Col>
+                                    <Col>${totalPrice}</Col>
                                 </Row>
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                                {error && <Message variant="danger">{error}</Message>}
                             </ListGroup.Item>
                             <ListGroup.Item>
                                 <Button type="button" className='btn-block' disabled={cart.cartItems === 0} onClick={placeOrderHandler}> Place Order</Button>
