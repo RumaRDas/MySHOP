@@ -23,7 +23,7 @@ const PlaceOrderScreen = ({ history }) => {
 
     console.log("PRICE:", itemsPrice)
     //calculate Shipping price
-    const shippingPrice = addDecimals(Number(itemsPrice > 100 ? 0 : 20))
+    const shippingPrice = addDecimals(Number(cart.itemPrice > 100 ? 0 : 20))
     const orderItems = cart.cartItems
     console.log(orderItems)
     //calculat tax price

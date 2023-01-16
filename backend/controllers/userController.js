@@ -100,10 +100,19 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 })
 
+//@des GET sll users
+//@route GET/api/users
+//@access private/Admin
+const getUser = asyncHandler(async (req, res) => {
+    // res.send('Success')
+    const users = await User.find({})
+    res.json(users)
+
+})
 export {
     authUser,
     getUserProfile,
     updateUserProfile,
     registerUser,
-
+    getUser
 }

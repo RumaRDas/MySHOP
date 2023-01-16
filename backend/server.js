@@ -26,6 +26,9 @@ app.use('/api/users', userRoutes)
 //For getting Ordera Routes 
 app.use('/api/orders', orderRoutes)
 
+// For getting paypal server
+app.get('/api/config/paypal', (req, res) => res.send(process.env.PAYPAL_CLIENT_ID))
+
 //For handling error 404  getting json responces in development mode
 app.use(notFound)
 
