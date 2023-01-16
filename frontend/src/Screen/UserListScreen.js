@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react'
 import { Table, Button } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import { LinkContainer } from 'react-router-bootstrap'
-import { getUserList, userLogin, deleteUser } from '../actions/userActions'
-import { TaskAbortError } from '@reduxjs/toolkit'
+import { getUserList, deleteUser } from '../actions/userActions'
+
 
 const UserListScreen = ({ history }) => {
     const dispatch = useDispatch()
@@ -27,10 +27,13 @@ const UserListScreen = ({ history }) => {
             history.push('/login')
         }
 
-    }, [dispatch, history, successDelete])
+    }, [dispatch, history, userInfo, successDelete])
 
     const deletHandler = (id) => {
-        dispatch(deleteUser(id))
+        if (window.confirm('Are You want to delete ')) {
+            dispatch(deleteUser(id))
+        }
+
     }
     return (
         <>
@@ -50,10 +53,10 @@ const UserListScreen = ({ history }) => {
                         <tr key={user._id}>
                             <td>{user.name}</td>
                             <td>{user.email}</td>
-                            <td><a hrf={`mailto:${user.email}`}>{user.isAdmin}</a></td>
+                            <td><a href={`mailto:${user.email}`}>{user.isAdmin}</a></td>
                             <td>{user.isAdmin ? (<i className='fas fa-check' style={{ color: 'green' }}></i>) : <i className='fas fa-times' style={{ color: 'red' }}></i>}</td>
                             <td>
-                                <LinkContainer to={`/user/${user._id}/edit`}>
+                                <LinkContainer to={`/admin/user/${user._id}/edit`}>
                                     <Button variant='light' className='btn-sm'><i className='fas fa-edit'></i></Button>
                                 </LinkContainer>
                                 <Button variant='danger' className='btn-sm' onClick={() => deletHandler(user._id)}>

@@ -12,10 +12,10 @@ import ProfileScreen from './Screen/ProfileScreen';
 import ShippingScreen from './Screen/ShippingScreen';
 import PaymentScreen from './Screen/PaymentScreen';
 import PlaceOrderScreen from './Screen/PlaceOrderScreen';
-import Order from './Screen/OrderScreen'
 import OrderScreen from './Screen/OrderScreen';
 import UserListScreen from './Screen/UserListScreen';
-
+import UserEditScreen from './Screen/UserEditScreen'
+import ProductListScreen from './Screen/ProductListScreen'
 const App=() =>{
   return (
     <Router>
@@ -33,6 +33,8 @@ const App=() =>{
           <Route path='/product/:id' component={ProductScreen}/>
           <Route path='/cart/:id?' component={CartScreen} />
           <Route path='/admin/userlist' component={UserListScreen} />
+          <Route path='/admin/user/:id/edit' component={UserEditScreen} />
+          <Route path='/admin/productlist' component={ProductListScreen} />
           <Route path='/' component={HomeScreen} exact />
         </Container>
       </main>
