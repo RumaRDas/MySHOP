@@ -26,7 +26,73 @@ const getProductById = asyncHandler(async (req, res) => {
     }
 })
 
+//@des DELETE A PRODUCT
+//@route DELETE /api/products/:id
+//@access private/admin
+const deleteProductById = asyncHandler(async (req, res) => {
+    const product = await Product.findById(req.params.id)
+    // if admin createor only can delete product we need to check 
+    //(if(req.user._id===product.user._id))
+
+    //any admin can delete any product
+    if (product) {
+        await product.remove()
+        res.json({ message: "Product removed" })
+    } else {
+        // res.status(404).json({ message: 'Product not found' })
+        res.status(404)
+        throw new Error('Product not found')
+    }
+})
+
+//@des CREATE A PRODUCT
+//@route POST/api/products
+//@access private/admin
+const createProduct = asyncHandler(async (req, res) => {
+    const product = new Product({
+        name: 'Sample name',
+        price: 0,
+        user: req.user._id,
+        image: '/images/sample.jpg',
+        brand: 'Sample Barnd',
+        category: 'sample category',
+        countInStock: 0,
+        numReviews: 0,
+        description: 'Sample description'
+    })
+    const createdProduct = await product.save()
+    res.status(201).json(createdProduct)
+})
+
+//@des UPDATE A PRODUCT
+//@route PUT/api/products/:id
+//@access private/admin
+const updateProduct = asyncHandler(async (req, res) => {
+    const { name, price, description, image, brand, category, countInStock } = req.body
+
+    const product = await Product.findById(req.params.id)
+
+    if (product) {
+        product.name = name
+        product.price = price
+        product.description = description
+        product.image = image
+        product.brand = brand
+        product.category = category
+        product.countInStock = countInStock
+
+        const updatedProduct = await product.save()
+        res.json(updatedProduct)
+    } else {
+        res.status(404)
+        throw new Error('Product Not found')
+    }
+
+})
 export{
     getProducts,
-    getProductById
+    getProductById,
+    deleteProductById,
+    createProduct,
+    updateProduct
 }

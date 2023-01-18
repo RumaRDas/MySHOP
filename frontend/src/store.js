@@ -1,12 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { productListReducers, productDetailsReducers } from './reducers/productReducers.js'
+import { productListReducers, productDetailsReducers, productDeleteReducer, productCreateReducer, productUpdateReducer } from './reducers/productReducers.js'
 import { cartReducer } from './reducers/cartReducer.js'
-import { orderCreateReducer, orderDetailsReducer, orderPayReducer, orderMyListReducer } from './reducers/orderReducers'
+import { orderCreateReducer, orderDetailsReducer, orderPayReducer, orderMyListReducer, orderListReducer, orderDeliverReducer } from './reducers/orderReducers.js'
 import { userLoginReducer, userRegisterReducer, userDetailsReducer, userUpdateProfileReducer, userListReducer, userDeleteReducer, userUpdateReducer } from './reducers/userReducer.js'
 
 const reducer = {
     productList: productListReducers,
     productDetails: productDetailsReducers,
+    productDelete: productDeleteReducer,
+    productCreate: productCreateReducer,
+    productUpdate: productUpdateReducer,
+
     cart: cartReducer,
 
     userLogin: userLoginReducer,
@@ -21,6 +25,8 @@ const reducer = {
     orderDetails: orderDetailsReducer,
     orderPay: orderPayReducer,
     orderMyList: orderMyListReducer,
+    orderList: orderListReducer,
+    orderDeliver: orderDeliverReducer
 
 }
 //get cart items from local storage
